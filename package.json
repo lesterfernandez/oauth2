@@ -1,0 +1,8 @@
+{
+  "name": "oauth2-ts",
+  "private": "true",
+  "workspaces": [
+    "packages/examples",
+    "packages/server"
+  ]
+}
