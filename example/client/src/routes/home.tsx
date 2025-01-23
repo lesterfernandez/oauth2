@@ -1,3 +1,6 @@
+import { useAuth } from "@/hooks/useAuth";
+import { useEffect } from "react";
+
 export function meta() {
   return [
     { title: "New React Router App" },
@@ -6,6 +9,14 @@ export function meta() {
 }
 
 export default function Home() {
+  const { login } = useAuth();
+
   console.log("hello world");
-  return <div>welcome!</div>;
+  return (
+    <div>
+      welcome!
+      <br></br>
+      <button onClick={login}>login with google</button>
+    </div>
+  );
 }
