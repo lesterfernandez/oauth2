@@ -1,5 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
+import { useAuth } from "@/lib/useOAuth";
 
 export function meta() {
   return [
