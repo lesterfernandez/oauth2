@@ -7,7 +7,7 @@ export const fetchOAuth = async <T>(
   method: requestType,
   url: string,
   route: string,
-  body?: any
+  body?: unknown
 ) => {
   const request = new Request(`${url}${route}`, {
     method,

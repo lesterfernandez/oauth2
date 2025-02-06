@@ -17,7 +17,7 @@ type OAuthProviderProps = {
   clientId: string;
   callbackUrl: string;
   onSuccess?: (response: Response) => void | Promise<void>;
-  onError?: (reason: any) => void | Promise<void>;
+  onError?: (reason: unknown) => void | Promise<void>;
   scope?: string;
   children?: ReactNode;
 };
@@ -40,7 +40,7 @@ export function OAuthContextProvider({
     authUrl.searchParams.set("scope", scope ?? "email user");
     authUrl.searchParams.set("state", state);
     window.location.href = authUrl.toString();
-  }, [clientId]);
+  }, [clientId, scope]);
 
   const [loading, setLoading] = useState(false);
 
@@ -54,7 +54,7 @@ export function OAuthContextProvider({
     }
     console.log(parseUrlState(queryParams.get("state") as string));
     setLoading(true);
-    fetch(callbackUrl, {
+    void fetch(callbackUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export function OAuthContextProvider({
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [callbackUrl, clientId, onError, onSuccess]);
 
   return <OAuthContext.Provider value={{ login, loading }}>{children}</OAuthContext.Provider>;
 }
