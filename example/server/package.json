@@ -8,13 +8,16 @@
     "watch": "tsx watch src/index.ts",
     "dev": "tsx src/index.ts",
     "build": "tsc",
-    "build-and-run": "npm run build && node ."
+    "build-and-run": "npm run build && node .",
+    "format": "prettier . --write",
+    "format-check": "prettier . --check"
   },
   "author": "",
   "license": "MIT",
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "prettier": "^3.4.2",
     "tsx": "^4.19.2"
   },
   "dependencies": {

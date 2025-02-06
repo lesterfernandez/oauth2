@@ -9,12 +9,7 @@ const LoginForm = () => {
       <div style={styles.container}>
         <h2 style={styles.title}>Login</h2>
         <form style={styles.form}>
-          <button
-            type="button"
-            onClick={login}
-            disabled={loading}
-            style={styles.button}
-          >
+          <button type="button" onClick={login} disabled={loading} style={styles.button}>
             {loading ? "Loading..." : "Sign in with Google"}
           </button>
         </form>
@@ -29,7 +24,6 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
-
   },
   container: {
     display: "flex",
