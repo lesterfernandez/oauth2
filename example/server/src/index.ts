@@ -1,20 +1,17 @@
-import express, { json, urlencoded } from "express";
-import { errorHandler, notFoundErrorHandler } from "@/middleware/error.js";
-import initRoutes from "./router/index.js";
+import express, { json } from "express";
+import attachRouters from "./routers/index.js";
+import { HttpCode } from "./util/http-code.js";
 
 const PORT = process.env["PORT"] || "3000";
 const app = express();
 
-// middleware
 app.use(json());
-app.use(urlencoded({ extended: false }));
 
-// routes
-initRoutes(app);
+attachRouters(app);
 
-// generic error handling
-app.use(notFoundErrorHandler);
-app.use(errorHandler);
+app.use((_, res) => {
+  res.status(HttpCode.NotFound).send("Invalid path");
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
