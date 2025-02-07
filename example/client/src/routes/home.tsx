@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "@/lib/useOAuth";
 
 const LoginForm = () => {
@@ -18,7 +17,7 @@ const LoginForm = () => {
   );
 };
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   pageContainer: {
     display: "flex",
     justifyContent: "center",

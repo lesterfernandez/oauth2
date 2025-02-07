@@ -46,7 +46,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   console.log("inside the app");
   return (
-    <OAuthContextProvider callbackUrl="https://example.com">
+    <OAuthContextProvider
+      callbackUrl="https://example.com"
+      clientId={import.meta.env["VITE_GOOGLE_CLIENT_ID"] as string}
+    >
       <Outlet />
     </OAuthContextProvider>
   );

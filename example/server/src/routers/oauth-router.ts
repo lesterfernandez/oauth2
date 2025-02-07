@@ -1,5 +1,5 @@
-import { HttpCode } from "@/util/http-code.js";
 import oauth from "@/services/oauth.js";
+import { HttpCode } from "@/util/http-code.js";
 import { Router } from "express";
 
 export const oauthRouter = Router();
