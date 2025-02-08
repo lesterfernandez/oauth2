@@ -1,7 +1,7 @@
-import { useAuth } from "@/lib/useOAuth";
+import { useOAuth } from "@/lib/useOAuth";
 
-const LoginForm = () => {
-  const { login, loading } = useAuth();
+export default function LoginForm() {
+  const { login, loading } = useOAuth();
 
   return (
     <div style={styles.pageContainer}>
@@ -15,7 +15,7 @@ const LoginForm = () => {
       </div>
     </div>
   );
-};
+}
 
 const styles: Record<string, React.CSSProperties> = {
   pageContainer: {
@@ -55,5 +55,3 @@ const styles: Record<string, React.CSSProperties> = {
     transition: "background-color 0.3s ease",
   },
 };
-
-export default LoginForm;

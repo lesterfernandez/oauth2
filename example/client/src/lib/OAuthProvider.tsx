@@ -37,7 +37,7 @@ export function OAuthContextProvider({
     authUrl.searchParams.set("client_id", clientId);
     authUrl.searchParams.set("redirect_uri", window.location.origin);
     authUrl.searchParams.set("response_type", "code");
-    authUrl.searchParams.set("scope", scope ?? "email user");
+    authUrl.searchParams.set("scope", scope ?? "email profile");
     authUrl.searchParams.set("state", state);
     window.location.href = authUrl.toString();
   }, [clientId, scope]);
@@ -46,7 +46,6 @@ export function OAuthContextProvider({
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    console.log(queryParams);
     const oauthRedirected =
       queryParams.has("code") && queryParams.get("state") === getEncodedUrlState();
     if (!oauthRedirected) {
