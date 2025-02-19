@@ -1,6 +1,11 @@
 import jwt from "jsonwebtoken";
 
-interface TokenPayload {
+type TokenError = {
+  error: string;
+  error_description: string;
+};
+
+export interface TokenPayload {
   access_token: string;
   expires_in: number;
   scope: string;
@@ -8,7 +13,7 @@ interface TokenPayload {
   id_token: string;
 }
 
-interface IdTokenPayload {
+export interface IdTokenPayload {
   iss: string;
   azp: string;
   aud: string;
@@ -24,29 +29,40 @@ interface IdTokenPayload {
   exp: number;
 }
 
-const clientSecret = process.env["GOOGLE_CLIENT_SECRET"] as string;
+const googleClientSecret = process.env["GOOGLE_CLIENT_SECRET"] as string;
 
 const exchangeCode = async (
   code: string,
   grantType: string,
   clientId: string,
   redirectUri: string
-) => {
+): Promise<IdTokenPayload | Error> => {
   const url = new URL("https://oauth2.googleapis.com/token");
   url.searchParams.set("grant_type", grantType);
   url.searchParams.set("code", code);
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("redirect_uri", redirectUri);
-  url.searchParams.set("client_secret", clientSecret);
+  url.searchParams.set("client_secret", googleClientSecret);
 
-  fetch(url, { method: "POST" })
-    .then(res => res.json())
-    .then(json => {
-      const { id_token: idToken } = json as TokenPayload;
+  try {
+    const res = await fetch(url, { method: "POST" });
 
-      const decoded = jwt.decode(idToken) as IdTokenPayload;
-      return decoded;
-    });
+    if (!res.ok) {
+      const { error } = (await res.json()) as TokenError;
+      throw new Error(`Token exchange error. status: ${res.status}, error: ${error}`);
+    }
+
+    const json = await res.json();
+    const { id_token: idToken } = json as TokenPayload;
+
+    const decoded = jwt.decode(idToken) as IdTokenPayload;
+    return decoded;
+  } catch (e) {
+    if (e instanceof Error) {
+      return e;
+    }
+    return new Error("ts-oauth: Unexpected Error");
+  }
 };
 
 export default {
