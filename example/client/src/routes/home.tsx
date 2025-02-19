@@ -1,14 +1,22 @@
 import { useOAuth } from "@/lib/useOAuth";
+import env from "@/env";
 
 export default function LoginForm() {
-  const { login, loading } = useOAuth();
+  const { startLoginFlow, loading } = useOAuth();
 
   return (
-    <div style={styles.pageContainer}>
-      <div style={styles.container}>
-        <h2 style={styles.title}>Login</h2>
-        <form style={styles.form}>
-          <button type="button" onClick={login} disabled={loading} style={styles.button}>
+    <div className="flex justify-center items-center h-screen">
+      <div className="flex flex-col items-center max-w-md p-5 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl text-gray-800 mb-5">Login</h2>
+        <form className="w-full flex flex-col">
+          <button
+            className="py-2.5 px-5 bg-blue-500 text-white border-none rounded-md cursor-pointer transition-colors duration-300"
+            type="button"
+            onClick={() =>
+              startLoginFlow({ provider: "google", clientId: env.VITE_GOOGLE_CLIENT_ID })
+            }
+            disabled={loading}
+          >
             {loading ? "Loading..." : "Sign in with Google"}
           </button>
         </form>
@@ -16,42 +24,3 @@ export default function LoginForm() {
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  pageContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-  },
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    maxWidth: "400px",
-    padding: "20px",
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  },
-  title: {
-    fontSize: "24px",
-    color: "#333",
-    marginBottom: "20px",
-  },
-  form: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  button: {
-    padding: "10px 20px",
-    backgroundColor: "#4285f4",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    fontSize: "16px",
-    cursor: "pointer",
-    transition: "background-color 0.3s ease",
-  },
-};
