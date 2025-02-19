@@ -46,7 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <OAuthContextProvider callbackUrl={`${env.VITE_SERVER_URL}/exchange`}>
+    <OAuthContextProvider callbackUrl={`${env.VITE_SERVER_URL}/oauth/exchange`}>
       <Outlet />
     </OAuthContextProvider>
   );
