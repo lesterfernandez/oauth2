@@ -51,9 +51,15 @@ class OAuth {
         }
       }
 
-      const { code, grant_type, redirect_uri, client_id } = req.body;
+      const {
+        code,
+        grant_type: grantType,
+        redirect_uri: redirectUri,
+        client_id: clientId,
+      } = req.body;
+
       oauthService
-        .exchangeCode(baseUrl, code, grant_type, client_id, redirect_uri, clientSecret)
+        .exchangeCode({ baseUrl, code, grantType, clientId, redirectUri, clientSecret })
         .then(data => onSuccess({ req, res, data: data as IdTokenPayload }))
         .catch(err => onFailure({ req, res, error: err as Error }))
         .finally(() => next);

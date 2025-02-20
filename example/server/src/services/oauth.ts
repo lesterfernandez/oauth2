@@ -29,14 +29,18 @@ export interface IdTokenPayload {
   exp: number;
 }
 
-const exchangeCode = async (
-  baseUrl: string,
-  code: string,
-  grantType: string,
-  clientId: string,
-  redirectUri: string,
-  clientSecret: string
-): Promise<IdTokenPayload | Error> => {
+type ExchangeCodeParams = {
+  baseUrl: string;
+  code: string;
+  grantType: string;
+  clientId: string;
+  redirectUri: string;
+  clientSecret: string;
+};
+
+const exchangeCode = async (params: ExchangeCodeParams): Promise<IdTokenPayload | Error> => {
+  const { baseUrl, grantType, code, clientId, redirectUri, clientSecret } = params;
+
   const url = new URL(baseUrl);
   url.searchParams.set("grant_type", grantType);
   url.searchParams.set("code", code);
