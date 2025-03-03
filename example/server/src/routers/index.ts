@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { oauthRouter } from "./oauth-router.js";
+import oauthRouter from "./oauth-router.js";
 
 enum Routes {
   OAUTH = "/oauth",

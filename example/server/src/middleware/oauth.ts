@@ -20,51 +20,49 @@ type Provider = {
   baseUrl: string;
 };
 
-class OAuth {
-  private _providers: Record<string, Provider>;
+const providers: Record<string, Provider> = {};
 
-  constructor() {
-    this._providers = {};
-  }
+const OAuth = (function () {
+  return {
+    setupProvider(provider: string, { baseUrl, clientSecret, onSuccess, onFailure }: Provider) {
+      providers[provider] = {
+        baseUrl,
+        clientSecret,
+        onSuccess,
+        onFailure,
+      };
+    },
 
-  setupProvider(provider: string, { baseUrl, clientSecret, onSuccess, onFailure }: Provider) {
-    this._providers[provider] = {
-      baseUrl,
-      clientSecret,
-      onSuccess,
-      onFailure,
-    };
-  }
-
-  authenticate(provider: string) {
-    if (!this._providers[provider]) {
-      throw new Error(`Provider ${provider} has not been set`);
-    }
-    const { onSuccess, onFailure, clientSecret, baseUrl } = this._providers[provider];
-
-    return (req: Request, res: Response, next: NextFunction) => {
-      const requiredFields = ["code", "client_id", "redirect_uri", "grant_type"];
-      for (const field of requiredFields) {
-        if (!req.body[field] || typeof req.body[field] !== "string") {
-          const error = new Error(`Missing field: ${field}`);
-          return onFailure({ req, res, error });
+    authenticate(providerName: string) {
+      return (req: Request, res: Response, next: NextFunction) => {
+        if (!providers[providerName]) {
+          throw new Error(`Provider ${providerName} has not been set`);
         }
-      }
+        const { onSuccess, onFailure, clientSecret, baseUrl } = providers[providerName];
 
-      const {
-        code,
-        grant_type: grantType,
-        redirect_uri: redirectUri,
-        client_id: clientId,
-      } = req.body;
+        const requiredFields = ["code", "client_id", "redirect_uri", "grant_type"];
+        for (const field of requiredFields) {
+          if (!req.body[field] || typeof req.body[field] !== "string") {
+            const error = new Error(`Missing field: ${field}`);
+            return onFailure({ req, res, error });
+          }
+        }
 
-      oauthService
-        .exchangeCode({ baseUrl, code, grantType, clientId, redirectUri, clientSecret })
-        .then(data => onSuccess({ req, res, data: data as IdTokenPayload }))
-        .catch(err => onFailure({ req, res, error: err as Error }))
-        .finally(() => next);
-    };
-  }
-}
+        const {
+          code,
+          grant_type: grantType,
+          redirect_uri: redirectUri,
+          client_id: clientId,
+        } = req.body;
+
+        oauthService
+          .exchangeCode({ baseUrl, code, grantType, clientId, redirectUri, clientSecret })
+          .then(data => onSuccess({ req, res, data: data as IdTokenPayload }))
+          .catch(err => onFailure({ req, res, error: err as Error }))
+          .finally(() => next);
+      };
+    },
+  };
+})();
 
 export default OAuth;
