@@ -1,14 +1,12 @@
 import { createContext, useCallback, useEffect, useState, type ReactNode } from "react";
 import {
-  clearRedirectClientId,
-  generateEncodedUrlState,
-  getEncodedUrlState,
-  getRedirectClientId,
+  clearUrlCookie,
+  generateUrlCookie,
+  getUrlCookie,
   parseUrlState,
-  setEncodedUrlState,
-  setRedirectClientId,
+  setUrlCookie,
 } from "./url_state";
-import { providerAuthUrl, type OAuthProvider } from "./providers";
+import { defaultAuthUrls, type OAuthProvider } from "./providers";
 
 type LoginParams =
   | {
@@ -22,10 +20,6 @@ export type OAuthProviderData = {
   startLoginFlow: (params: LoginParams) => void;
   loading: boolean;
 };
-
-function getAuthUrl(params: LoginParams) {
-  return params.authUrl ?? providerAuthUrl(params.provider as OAuthProvider);
-}
 
 export const OAuthContext = createContext<OAuthProviderData | null>(null);
 
@@ -50,10 +44,9 @@ export function OAuthContextProvider({
 }: OAuthProviderProps) {
   const startLoginFlow = useCallback(
     (params: LoginParams) => {
-      const url = new URL(getAuthUrl(params));
-      const state = generateEncodedUrlState("google");
-      setEncodedUrlState(state);
-      setRedirectClientId(params.clientId);
+      const url = new URL(params.authUrl ?? defaultAuthUrls(params.provider as OAuthProvider));
+      const state = generateUrlCookie("google");
+      setUrlCookie(state);
       url.searchParams.set("client_id", params.clientId);
       url.searchParams.set("redirect_uri", window.location.origin);
       url.searchParams.set("response_type", "code");
@@ -70,12 +63,13 @@ export function OAuthContextProvider({
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const urlState = queryParams.get("state");
-    const storedState = getEncodedUrlState();
+    const storedState = getUrlCookie();
     const oauthRedirected =
       code && urlState && urlState === storedState && parseUrlState(storedState);
     if (!oauthRedirected) {
       return;
     }
+    clearUrlCookie();
     const { provider } = parseUrlState(storedState)!;
     if (onRedirect) {
       onRedirect({ code, provider });
@@ -84,8 +78,6 @@ export function OAuthContextProvider({
       return;
     }
     setLoading(true);
-    const clientId = getRedirectClientId();
-    clearRedirectClientId();
     void fetch(callbackUrl, {
       method: "POST",
       headers: {
@@ -94,7 +86,6 @@ export function OAuthContextProvider({
       body: JSON.stringify({
         code,
         provider,
-        client_id: clientId,
         redirect_uri: window.location.origin,
         grant_type: "authorization_code",
       }),
