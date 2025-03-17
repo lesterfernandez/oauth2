@@ -41,32 +41,30 @@ type ExchangeCodeParams = {
 const exchangeCode = async (params: ExchangeCodeParams): Promise<IdTokenPayload | Error> => {
   const { baseUrl, grantType, code, clientId, redirectUri, clientSecret } = params;
 
-  const url = new URL(baseUrl);
-  url.searchParams.set("grant_type", grantType);
-  url.searchParams.set("code", code);
-  url.searchParams.set("client_id", clientId);
-  url.searchParams.set("redirect_uri", redirectUri);
-  url.searchParams.set("client_secret", clientSecret);
+  const res = await fetch(baseUrl, {
+    method: "POST",
+    body: JSON.stringify({
+      grant_type: grantType,
+      code: code,
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      client_secret: clientSecret,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-  try {
-    const res = await fetch(url, { method: "POST" });
-
-    if (!res.ok) {
-      const { error } = (await res.json()) as TokenError;
-      throw new Error(`Token exchange error. status: ${res.status}, error: ${error}`);
-    }
-
-    const json = await res.json();
-    const { id_token: idToken } = json as TokenPayload;
-
-    const decoded = jwt.decode(idToken) as IdTokenPayload;
-    return decoded;
-  } catch (e) {
-    if (e instanceof Error) {
-      return e;
-    }
-    return new Error("ts-oauth: Unexpected Error");
+  if (!res.ok) {
+    const { error } = (await res.json()) as TokenError;
+    throw new Error(`Token exchange error. status: ${res.status}, error: ${error}`);
   }
+
+  const json = await res.json();
+  const { id_token: idToken } = json as TokenPayload;
+
+  const decoded = jwt.decode(idToken) as IdTokenPayload;
+  return decoded;
 };
 
 export default {
