@@ -1,7 +1,7 @@
 import "dotenv/config";
-import OAuth from "./lib/oauth.js";
 import express, { json } from "express";
 import cors from "cors";
+import { OAuth } from "@oauth2-ts/express";
 
 const PORT = process.env["PORT"] || "3000";
 const GOOGLE_CLIENT_SECRET = process.env["GOOGLE_CLIENT_SECRET"] as string;
