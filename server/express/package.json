@@ -1,0 +1,32 @@
+{
+  "name": "@oauth2-ts/express",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsup",
+    "lint": "eslint .",
+    "format": "prettier . --write",
+    "format-check": "prettier . --check"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.8",
+    "eslint": "^9.20.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.2",
+    "typescript-eslint": "^8.23.0"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}
