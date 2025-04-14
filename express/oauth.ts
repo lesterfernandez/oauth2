@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { exchangeCode, IdTokenPayload } from "@/lib/code.js";
+import { exchangeCode, IdTokenPayload } from "./code.js";
 
 type OAuthSuccessCallback = {
   req: Request;
@@ -21,7 +21,7 @@ type Provider = {
   clientId: string;
 };
 
-class OAuth {
+export class OAuth {
   providers: Record<string, Provider> = {};
 
   setupProvider(providerName: string, provider: Provider) {
@@ -56,12 +56,17 @@ class OAuth {
 
       const { code, grant_type: grantType, redirect_uri: redirectUri } = req.body;
 
-      exchangeCode({ tokenUrl, code, grantType, clientId, redirectUri, clientSecret })
+      exchangeCode({
+        tokenUrl,
+        code,
+        grantType,
+        clientId,
+        redirectUri,
+        clientSecret,
+      })
         .then(data => onSuccess({ req, res, data: data as IdTokenPayload }))
         .catch(err => onFailure({ req, res, error: err as Error }))
         .finally(() => next);
     };
   }
 }
-
-export default OAuth;

@@ -1,10 +1,9 @@
 {
   "private": "true",
   "workspaces": [
-    "example/client",
-    "example/server",
-    "server",
-    "client"
+    "examples/**",
+    "react-spa",
+    "express"
   ],
   "devDependencies": {
     "@types/node": "^22.10.6",
