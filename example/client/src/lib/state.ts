@@ -1,19 +1,19 @@
 const OAUTH_STATE_KEY = "oauth_state";
 
-export const generateUrlCookie = (provider: string) => {
+export const generateState = (provider: string) => {
   const nonce = Array.from(window.crypto.getRandomValues(new Uint8Array(3)), num =>
     num.toString(16)
   ).join("");
   return `${provider}:${nonce}`;
 };
 
-export const getUrlCookie = () =>
+export const getState = () =>
   document.cookie
     .split("; ")
     .find(row => row.startsWith(`${OAUTH_STATE_KEY}=`))
     ?.split("=")[1];
 
-export const setUrlCookie = (state: string) => {
+export const setState = (state: string) => {
   if (document.cookie.includes(`${OAUTH_STATE_KEY}=`)) {
     const fields = document.cookie.split("; ");
     const idx = fields.findIndex(val => val.startsWith(OAUTH_STATE_KEY));
@@ -22,18 +22,17 @@ export const setUrlCookie = (state: string) => {
     return;
   }
   document.cookie =
-    (document.cookie ? `${document.cookie}; ` : "") +
-    `${OAUTH_STATE_KEY}=${state}; SameSite=Strict`;
+    (document.cookie ? `${document.cookie}; ` : "") + `${OAUTH_STATE_KEY}=${state}; SameSite=Lax`;
 };
 
-export const clearUrlCookie = () => {
+export const clearState = () => {
   if (!document.cookie.includes(`${OAUTH_STATE_KEY}=`)) {
     return;
   }
-  setUrlCookie("");
+  setState("");
 };
 
-export const parseUrlState = (state: string) => {
+export const parseState = (state: string) => {
   const decodedState = decodeURIComponent(state);
   if (!decodedState.includes(":") || decodedState.length < 3) {
     return null;

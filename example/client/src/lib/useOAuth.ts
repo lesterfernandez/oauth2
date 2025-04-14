@@ -1,11 +1,11 @@
-import { OAuthContext } from "@/lib/OAuthProvider";
+import { OAuthSpaContext } from "@/lib/OAuthSpaProvider";
 import { useContext } from "react";
 
 export const useOAuth = () => {
-  const contextValue = useContext(OAuthContext);
+  const contextValue = useContext(OAuthSpaContext);
 
   if (!contextValue) {
-    throw new Error("OAuthContextProvider needs to be added at root in order to use useAuth");
+    throw new Error("Provider needs to be added at root in order to use useAuth");
   }
 
   return contextValue;

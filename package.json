@@ -1,10 +1,10 @@
 {
-  "name": "oauth2-ts",
   "private": "true",
   "workspaces": [
     "example/client",
     "example/server",
-    "server"
+    "server",
+    "client"
   ],
   "devDependencies": {
     "@types/node": "^22.10.6",

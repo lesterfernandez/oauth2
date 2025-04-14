@@ -2,7 +2,7 @@ import { useOAuth } from "@/lib/useOAuth";
 import env from "@/env";
 
 export default function LoginForm() {
-  const { startLoginFlow, loading } = useOAuth();
+  const { redirectToProvider, loading } = useOAuth();
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -13,7 +13,10 @@ export default function LoginForm() {
             className="py-2.5 px-5 bg-blue-500 text-white border-none rounded-md cursor-pointer transition-colors duration-300"
             type="button"
             onClick={() =>
-              startLoginFlow({ provider: "google", clientId: env.VITE_GOOGLE_CLIENT_ID })
+              redirectToProvider({
+                provider: "google",
+                clientId: env.VITE_GOOGLE_CLIENT_ID,
+              })
             }
             disabled={loading}
           >

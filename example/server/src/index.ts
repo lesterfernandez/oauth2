@@ -15,7 +15,7 @@ app.use(json());
 
 const oauth = new OAuth();
 oauth.setupProvider("google", {
-  baseUrl: GOOGLE_TOKEN_URL,
+  tokenUrl: GOOGLE_TOKEN_URL,
   clientSecret: GOOGLE_CLIENT_SECRET,
   clientId: GOOGLE_CLIENT_ID,
   onSuccess: ({ res, data }) => {
@@ -24,9 +24,10 @@ oauth.setupProvider("google", {
   },
   onFailure: ({ res, error }) => {
     console.log("failure:", error);
-    res.status(500).json({ error: error.message });
+    res.status(401).json({ error: error.message });
   },
 });
+
 app.use("/oauth/exchange", oauth.authenticate());
 
 app.listen(PORT, () => {

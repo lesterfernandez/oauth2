@@ -1,5 +1,5 @@
 {
-  "name": "@oauth-ts/client",
+  "name": "@oauth2/react-spa",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
