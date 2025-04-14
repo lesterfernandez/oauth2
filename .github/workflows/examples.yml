@@ -22,6 +22,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
+      - name: Build references projects
+        run: npx tsc --build
       - name: Type check examples
         run: npm run typecheck --workspaces
       - name: Lint
