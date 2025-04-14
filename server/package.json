@@ -1,5 +1,5 @@
 {
-  "name": "@oauth2-ts/server",
+  "name": "@oauth2/express",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

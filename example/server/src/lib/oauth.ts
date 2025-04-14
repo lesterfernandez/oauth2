@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import oauthService, { IdTokenPayload } from "@/lib/code.js";
+import { exchangeCode, IdTokenPayload } from "@/lib/code.js";
 
 type OAuthSuccessCallback = {
   req: Request;
@@ -16,7 +16,7 @@ type OAuthFailureCallback = {
 type Provider = {
   onSuccess: (successCallback: OAuthSuccessCallback) => void | Promise<void>;
   onFailure: (errorCallback: OAuthFailureCallback) => void;
-  baseUrl: string;
+  tokenUrl: string;
   clientSecret: string;
   clientId: string;
 };
@@ -43,7 +43,7 @@ class OAuth {
         throw new Error(`Provider ${providerName} has not been set`);
       }
 
-      const { onSuccess, onFailure, clientSecret, clientId, baseUrl } =
+      const { onSuccess, onFailure, clientSecret, clientId, tokenUrl } =
         this.providers[providerName];
 
       const requiredFields = ["code", "provider", "redirect_uri", "grant_type"];
@@ -56,8 +56,7 @@ class OAuth {
 
       const { code, grant_type: grantType, redirect_uri: redirectUri } = req.body;
 
-      oauthService
-        .exchangeCode({ baseUrl, code, grantType, clientId, redirectUri, clientSecret })
+      exchangeCode({ tokenUrl, code, grantType, clientId, redirectUri, clientSecret })
         .then(data => onSuccess({ req, res, data: data as IdTokenPayload }))
         .catch(err => onFailure({ req, res, error: err as Error }))
         .finally(() => next);

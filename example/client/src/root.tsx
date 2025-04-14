@@ -9,7 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import stylesheet from "./global.css?url";
-import { OAuthContextProvider } from "@/lib/OAuthProvider";
+import { OAuthSpaProvider } from "@/lib/OAuthSpaProvider";
 import env from "@/env";
 
 export const links: Route.LinksFunction = () => [
@@ -46,7 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <OAuthContextProvider
+    <OAuthSpaProvider
       callbackUrl={`${env.VITE_SERVER_URL}/oauth/exchange`}
       onSuccess={async ({ provider, response }) => {
         console.log("successfully logged in with", provider, {
@@ -55,7 +55,7 @@ export default function App() {
       }}
     >
       <Outlet />
-    </OAuthContextProvider>
+    </OAuthSpaProvider>
   );
 }
 

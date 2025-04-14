@@ -5,7 +5,7 @@ type TokenError = {
   error_description: string;
 };
 
-export interface TokenPayload {
+interface TokenPayload {
   access_token: string;
   expires_in: number;
   scope: string;
@@ -29,19 +29,19 @@ export interface IdTokenPayload {
   exp: number;
 }
 
-type ExchangeCodeParams = {
-  baseUrl: string;
+type ExchangeOptions = {
+  tokenUrl: string;
   code: string;
   grantType: string;
-  clientId: string;
   redirectUri: string;
+  clientId: string;
   clientSecret: string;
 };
 
-const exchangeCode = async (params: ExchangeCodeParams): Promise<IdTokenPayload | Error> => {
-  const { baseUrl, grantType, code, clientId, redirectUri, clientSecret } = params;
+export async function exchangeCode(params: ExchangeOptions): Promise<IdTokenPayload | Error> {
+  const { tokenUrl, grantType, code, clientId, redirectUri, clientSecret } = params;
 
-  const res = await fetch(baseUrl, {
+  const res = await fetch(tokenUrl, {
     method: "POST",
     body: JSON.stringify({
       grant_type: grantType,
@@ -61,12 +61,9 @@ const exchangeCode = async (params: ExchangeCodeParams): Promise<IdTokenPayload 
   }
 
   const json = await res.json();
+  console.log("authenticated!: ", JSON.stringify(json, null, 2));
   const { id_token: idToken } = json as TokenPayload;
 
   const decoded = jwt.decode(idToken) as IdTokenPayload;
   return decoded;
-};
-
-export default {
-  exchangeCode,
-};
+}
