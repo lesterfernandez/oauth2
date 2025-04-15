@@ -1,8 +1,8 @@
-import { createContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { clearState } from "./state";
-import { detectRedirect, redirectToProvider } from "./spa";
+import { detectRedirect, redirectToProvider } from "./redirect";
 
-export type OAuthProviderData = {
+type OAuthProviderData = {
   redirectToProvider: typeof redirectToProvider;
   loading: boolean;
 };
@@ -74,3 +74,13 @@ export function OAuthSpaProvider({
     </OAuthSpaContext.Provider>
   );
 }
+
+export const useOAuth = () => {
+  const contextValue = useContext(OAuthSpaContext);
+
+  if (!contextValue) {
+    throw new Error("Provider needs to be added at root in order to use useAuth");
+  }
+
+  return contextValue;
+};

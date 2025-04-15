@@ -22,7 +22,8 @@ export const setState = (state: string) => {
     return;
   }
   document.cookie =
-    (document.cookie ? `${document.cookie}; ` : "") + `${OAUTH_STATE_KEY}=${state}; SameSite=Lax`;
+    (document.cookie ? `${document.cookie}; ` : "") +
+    `${OAUTH_STATE_KEY}=${state}; SameSite=Strict`;
 };
 
 export const clearState = () => {

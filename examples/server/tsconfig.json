@@ -6,6 +6,7 @@
     "rootDir": "src",
     "declaration": true,
     "declarationMap": true,
+    "sourceMap": true,
     "outDir": "dist",
     "esModuleInterop": true,
     "strict": true,
@@ -21,6 +22,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../../express" }]
+  "include": ["src/**/*"]
 }

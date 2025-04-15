@@ -9,8 +9,10 @@ import {
 
 import type { Route } from "./+types/root";
 import stylesheet from "./global.css?url";
-import { OAuthSpaProvider } from "@/lib/OAuthSpaProvider";
+import { OAuthSpaProvider } from "@oauth2/react-spa";
 import env from "@/env";
+import { UserProvider, useUser } from "@/context/user";
+import type { ReactNode } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -36,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <Providers>{children}</Providers>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -44,14 +46,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function Providers({ children }: { children: ReactNode }) {
+  return <UserProvider>{children}</UserProvider>;
+}
+
 export default function App() {
+  const { setUser } = useUser();
+
   return (
     <OAuthSpaProvider
       callbackUrl={`${env.VITE_SERVER_URL}/oauth/exchange`}
       onSuccess={async ({ provider, response }) => {
-        console.log("successfully logged in with", provider, {
-          data: (await response.json()) as unknown,
-        });
+        const data = (await response.json()) as { name: string };
+        console.log("successfully logged in with", provider, { data });
+        setUser({ name: data.name });
       }}
     >
       <Outlet />
