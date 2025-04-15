@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "npm run build -w=express -w=react-spa"
+  },
   "private": "true",
   "workspaces": [
     "examples/**",
