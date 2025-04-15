@@ -1,8 +1,18 @@
-import { useOAuth } from "@/lib/useOAuth";
+import { useOAuth } from "@oauth2/react-spa";
+import { useUser } from "@/context/user";
 import env from "@/env";
 
 export default function LoginForm() {
   const { redirectToProvider, loading } = useOAuth();
+  const { user } = useUser();
+
+  if (user) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-blue-500">
+        <h1 className="text-4xl text-white">Welcome {user.name} 🎉</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center h-screen">

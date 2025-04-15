@@ -1,4 +1,8 @@
 {
   "files": [],
-  "references": [{ "path": "express" }, { "path": "examples/server" }]
+  "references": [
+    { "path": "express" },
+    { "path": "examples/server" },
+    { "path": "react-spa" }
+  ]
 }
