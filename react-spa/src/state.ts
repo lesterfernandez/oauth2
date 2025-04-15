@@ -10,20 +10,11 @@ export const generateState = (provider: string) => {
 export const getState = () =>
   document.cookie
     .split("; ")
-    .find(row => row.startsWith(`${OAUTH_STATE_KEY}=`))
+    .find(cookie => cookie.startsWith(`${OAUTH_STATE_KEY}=`))
     ?.split("=")[1];
 
 export const setState = (state: string) => {
-  if (document.cookie.includes(`${OAUTH_STATE_KEY}=`)) {
-    const fields = document.cookie.split("; ");
-    const idx = fields.findIndex(val => val.startsWith(OAUTH_STATE_KEY));
-    fields[idx] = `${OAUTH_STATE_KEY}=${state}`;
-    document.cookie = fields.join("; ");
-    return;
-  }
-  document.cookie =
-    (document.cookie ? `${document.cookie}; ` : "") +
-    `${OAUTH_STATE_KEY}=${state}; SameSite=Strict`;
+  document.cookie = `${OAUTH_STATE_KEY}=${state}; SameSite=Strict`;
 };
 
 export const clearState = () => {
