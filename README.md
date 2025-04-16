@@ -2,7 +2,7 @@
 
 oauth2 are lightweight and simple libraries with the goal of quickly integrating OAuth 2.0 using any provider with type-safety and security in mind by following the OAuth 2.0 protocol and extensions such as the PKCE flow.
 
-These libraries are meant to be utilized in projects that have server-side processing in order to securely exchange access tokens and return a callback
+These libraries are meant to be utilized together in projects that have server-side processing in order to securely exchange access tokens.
 
 ## Features
 
@@ -22,7 +22,7 @@ npm install npm@latest -g
 
 ## Installation
 
-Currently there is only support for React SPA applications in the frontend and express in the backend. More frameworks will be added in the future
+Currently there is only support for React SPA applications in the frontend and express in the backend. Support for SSR frameworks will be added in the future.
 
 ### In frontend project
 ```
@@ -120,9 +120,11 @@ export const App = () => {
 }
 ```
 
+A full example handling user data can be found in the [examples](https://github.com/lesterfernandez/oauth2/tree/master/examples) directory. 
+
 ## How it works
 
-1. User clicks sign in button, is redirected to OAuth provider
-2. `OAuthSpaProvider` requests authorization token, passes it to backend endpoint
-3. Backend server requests access token and passes information to `onSuccess` or `onFailure` callbacks
-4. Frontend server receives information related to OAuth sign-in in `onSuccess` or `onError` callbacks
+1. User clicks sign in button, is redirected to OAuth provider.
+2. `OAuthSpaProvider` detects successful OAuth redirect, passes token information to backend.
+3. Backend server requests access token and passes information to `onSuccess` or `onFailure` callbacks.
+4. Frontend server receives information related to OAuth sign-in in `onSuccess`, `onError`, and `onRedirect` callbacks.
