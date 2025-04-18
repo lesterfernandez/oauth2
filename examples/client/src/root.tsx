@@ -57,9 +57,9 @@ export default function App() {
     <OAuthSpaProvider
       callbackUrl={`${env.VITE_SERVER_URL}/oauth/exchange`}
       onSuccess={async ({ provider, response }) => {
-        const data = (await response.json()) as { name: string };
+        const data = (await response.json()) as { name: string; email: string; picture: string };
         console.log("successfully logged in with", provider, { data });
-        setUser({ name: data.name });
+        setUser({ name: data.name, email: data.email, picture: data.picture });
       }}
     >
       <Outlet />
