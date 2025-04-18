@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router build",
-    "start": "react-router-serve ./build/server/index.js",
+    "build": "vite build",
+    "start": "npx serve dist/client/",
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint .",
     "format": "prettier . --write",

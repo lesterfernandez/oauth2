@@ -18,6 +18,7 @@ type LoginParams =
 
 export type OAuthProviderData = {
   startLoginFlow: (params: LoginParams) => void;
+  logout?: () => void;
   loading: boolean;
 };
 
@@ -106,6 +107,6 @@ export function OAuthContextProvider({
   }, [callbackUrl, onError, onSuccess, onRedirect, callback]);
 
   return (
-    <OAuthContext.Provider value={{ startLoginFlow, loading }}>{children}</OAuthContext.Provider>
+    <OAuthContext.Provider value={{ startLoginFlow, logout:() =>{}, loading }}>{children}</OAuthContext.Provider>
   );
 }
