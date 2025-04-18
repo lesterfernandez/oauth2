@@ -1,18 +1,19 @@
 import { useOAuth } from "@oauth2/react-spa";
 import { useUser } from "@/context/user";
 import env from "@/env";
+import {useEffect} from "react";
+import {useNavigate} from "react-router";
 
 export default function LoginForm() {
   const { redirectToProvider, loading } = useOAuth();
   const { user } = useUser();
+  const navigate = useNavigate();
 
-  if (user) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-blue-500">
-        <h1 className="text-4xl text-white">Welcome {user.name} 🎉</h1>
-      </div>
-    );
-  }
+    useEffect(() => {
+        if (user) {
+            void navigate("/dashboard");
+        }
+    }, [user, navigate]);
 
   return (
     <div className="flex justify-center items-center h-screen">
