@@ -1,44 +1,17 @@
 # oauth2
 
-oauth2 are lightweight and simple libraries with the goal of quickly integrating OAuth 2.0 using any provider with type-safety and security in mind by following the OAuth 2.0 protocol and extensions such as the PKCE flow.
-
-These libraries are meant to be utilized together in projects that have server-side processing in order to securely exchange access tokens.
+oauth2 is a suite of lightweight and simple libraries with the goal of quickly integrating OAuth 2.0 into web applications.
 
 ## Features
 
-* [PKCE](https://oauth.net/2/pkce/) flow
-    * Additional layer of security that protects users against CSRF and authorization code injection attacks.
-* Simple to add
-    *  See [usage](#usage) examples
-* Type-safety
+- Easy integration with React and Express
+- Compatible with multiple OAuth 2.0 providers
+- Simple to add (see [usage](#usage) examples)
+- Type-safety
 
-## Prerequisites
+## Basic Usage
 
-npm (Node Package Manager)
-
-```
-npm install npm@latest -g
-```
-
-## Installation
-
-Currently there is only support for React SPA applications in the frontend and express in the backend. Support for SSR frameworks will be added in the future.
-
-### In frontend project
-```
-npm install @oauth2/react-spa
-```
-
-### In backend project
-```
-npm install @oauth2/express
-```
-
-## Usage
-
-### Using `@oauth2/express` 
-
-1. Create express server and setup provider
+### `@oauth2/express`
 
 ```js
 import express, { json } from "express";
@@ -69,11 +42,11 @@ app.listen(PORT, () => {
 });
 ```
 
-### Using `@oauth2/react-spa` and [Vite React](https://vite.dev/guide/)
+### `@oauth2/react-spa` with [Vite React](https://vite.dev/guide/)
 
-2. Wrap application around `OAuthSpaProvider` and provide `callbackUrl` from backend server and `onSuccess` callback 
+1. Wrap application around `OAuthSpaProvider` and provide `callbackUrl` from backend server and `onSuccess` callback
 
-```js
+```tsx
 import { OAuthSpaProvider } from "@oauth2/react-spa";
 
 createRoot(document.getElementById('root')!).render(
@@ -94,9 +67,9 @@ createRoot(document.getElementById('root')!).render(
 )
 ```
 
-3. Add `redirectToProvider`
+2. Commence the authorization flow
 
-```js
+```tsx
 import { useOAuth } from "@oauth2/react-spa";
 
 export const App = () => {
@@ -105,10 +78,10 @@ export const App = () => {
   const onSignIn = () => {
     redirectToProvider({
       clientId: env.VITE_GOOGLE_CLIENT_ID,
-      provider: "google", // or add custom provider link
-      scope: "email profile" // default
+      provider: "google",
+      scope: "email profile openid",
     });
-  }
+  };
 
   return (
     <div>
@@ -117,14 +90,16 @@ export const App = () => {
       </button>
     </div>
   );
-}
+};
 ```
 
-A full example handling user data can be found in the [examples](https://github.com/lesterfernandez/oauth2/tree/master/examples) directory. 
+A full example handling user data can be found in the [examples](https://github.com/lesterfernandez/oauth2/tree/master/examples) directory.
 
 ## How it works
 
-1. User clicks sign in button, is redirected to OAuth provider.
-2. `OAuthSpaProvider` detects successful OAuth redirect, passes token information to backend.
-3. Backend server requests access token and passes information to `onSuccess` or `onFailure` callbacks.
-4. Frontend server receives information related to OAuth sign-in in `onSuccess`, `onError`, and `onRedirect` callbacks.
+1. User clicks sign in button and is redirected to OAuth provider
+2. User signs into their provider and is redirected back to the client
+3. `OAuthSpaProvider` detects the OAuth redirect before forwarding an authorization token along with some other data to the backend
+4. Backend server requests access token and passes data to the `onSuccess` or `onFailure` callback
+5. Backend sends response data to the client
+6. Client receives a backend response and makes it available through the `onSuccess` or `onFailure` callback
